@@ -7,6 +7,8 @@ import (
 )
 
 func VerifyPassword(providedPassword string, userPassword string) (bool, string) {
+
+	// to compare the provided password and the stored user password
 	err := bcrypt.CompareHashAndPassword([]byte(providedPassword), []byte(userPassword))
 
 	check := true

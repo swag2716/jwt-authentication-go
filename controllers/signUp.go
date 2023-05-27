@@ -44,6 +44,10 @@ func Signup() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "this email already exist"})
 		}
 
+		// to hash password and store it
+		password := HashPassword(*user.Password)
+		user.Password = &password
+
 		// to check if the same phone number already exists
 		count, err = userCollection.CountDocuments(ctx, bson.M{"phone": user.Phone})
 		if err != nil {
