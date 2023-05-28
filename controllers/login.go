@@ -26,8 +26,7 @@ func Login() gin.HandlerFunc {
 		err := userCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&foundUser)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "email or password is incorrect"})
-			return
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "email is incorrect"})
 		}
 
 		passwordIsValid, msg := VerifyPassword(*user.Password, *foundUser.Password)

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -42,10 +43,10 @@ func GetUsers() gin.HandlerFunc {
 		groupStage := bson.D{{Key: "$group", Value: bson.D{
 			{Key: "_id", Value: bson.D{{Key: "_id", Value: "null"}}},
 			{Key: "total_count", Value: bson.D{{Key: "$sum", Value: 1}}},
-			{Key: "data", Value: bson.D{{Key: "$push", Value: "$$roots"}}},
+			{Key: "data", Value: bson.D{{Key: "$push", Value: "$$ROOT"}}},
 		}}}
 		projectStage := bson.D{
-			{Key: "project", Value: bson.D{
+			{Key: "$project", Value: bson.D{
 				{Key: "_id", Value: 0},
 				{Key: "total_count", Value: 1},
 				{Key: "user_items", Value: bson.D{{Key: "$slice", Value: []interface{}{"$data", startIndex, recordPerPage}}}},
@@ -54,6 +55,7 @@ func GetUsers() gin.HandlerFunc {
 		result, err := userCollection.Aggregate(ctx, mongo.Pipeline{matchStage, groupStage, projectStage})
 
 		if err != nil {
+			fmt.Println(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "error ocurred while listing user items"})
 			return
 		}

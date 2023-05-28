@@ -9,13 +9,13 @@ import (
 func VerifyPassword(providedPassword string, userPassword string) (bool, string) {
 
 	// to compare the provided password and the stored user password
-	err := bcrypt.CompareHashAndPassword([]byte(providedPassword), []byte(userPassword))
+	err := bcrypt.CompareHashAndPassword([]byte(userPassword), []byte(providedPassword))
 
 	check := true
 	msg := ""
 
 	if err != nil {
-		msg = fmt.Sprintln("email or password is incorrect")
+		msg = fmt.Sprintln("password is incorrect")
 		check = false
 	}
 	return check, msg
